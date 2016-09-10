@@ -117,10 +117,13 @@ for(var i = 0; i < 10; i++)
 {
     var ref = firebase.database().ref('status'+i);
     ref.on('value', function(snapshot) {
-        themovie.sendMessage({
-            method: snapshot.val(),
-            pos: snapshot.W.path.o[0].substring(6)
-        });
+        if(servants_here != 0)
+        {
+            themovie.sendMessage({
+                method: snapshot.val(),
+                pos: snapshot.W.path.o[0].substring(6)
+            });
+        }
     });
 }
 

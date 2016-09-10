@@ -20,18 +20,26 @@ var config = {
 firebase.initializeApp(config);
 var db = firebase.database();
 var servants_connected = 0;
+db.ref("model_structure").set({
+    hidden_size: "254",
+    num_inputs: "764",
+    num_outputs: "10",
+    learning_rate: ".001",
+})
 db.ref("request_recieved").set(false)
 db.ref("servants_connected").set(servants_connected)
 
-app.get('/servant_connect', function (req, res) {
+app.post('/servant_connect', function (req, res) {
     servants_connected += 1;
+    console.log("servants changed. Total: " + servants_connected);
     var ref = db.ref("servants_connected")
     ref.set(servants_connected)
-    res.send(servants_connected);
+    res.send(servants_connected.toString());
 });
 
 app.post('/servant_disconnect', function (req, res) {
     servants_connected -= 1;
+    console.log("servants changed. Total: " + servants_connected);
     var ref = db.ref("servants_connected")
     ref.set(servants_connected)
     res.send("Disonnected");
@@ -41,9 +49,9 @@ app.post('/client_request', function (req, res) {
     var ref = db.ref("model_structure")
     ref.set({
         hidden_size: req.body.hidden_size,
-        num_layers: req.body.num_layers,
         num_inputs: req.body.num_inputs,
         num_outputs: req.body.num_outputs,
+        learning_rate: req.body.learning_rate,
     })
     db.ref("request_recieved").set(true)
 
