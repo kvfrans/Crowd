@@ -55,6 +55,10 @@
       <label>Learning rate</label>
       <input is="iron-input" type="number" id="learning_rate"></input>
     </paper-input-container>
+    <paper-input-container>
+      <label>Number of iterations</label>
+      <input is="iron-input" type="number" id="num_iterations"></input>
+    </paper-input-container>
     <paper-button id="submit" on-tap="handleTap">Start</paper-button>
   </dom-module>
 </body>
@@ -67,7 +71,8 @@ button.addEventListener('tap', function(e) {
   var num_inputs = document.getElementById("num_inputs").value;
   var num_outputs = document.getElementById("num_outputs").value;
   var learning_rate = document.getElementById("learning_rate").value;
-  var params = "hidden_size="+hidden_size+"&num_inputs="+num_inputs+"&num_outputs="+num_outputs+"&learning_rate="+learning_rate;
+  var num_iterations = document.getElementById("num_iterations").value;
+  var params = "hidden_size="+hidden_size+"&num_inputs="+num_inputs+"&num_outputs="+num_outputs+"&learning_rate="+learning_rate+"&num_iterations="+num_iterations;
   http.open("POST", url, true);
 
   //Send the proper header information along with the request
