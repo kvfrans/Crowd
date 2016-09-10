@@ -3,6 +3,7 @@
 <div id="movie"></div>
 <script>
 
+var totaliters = 100;
 
 var themovie = bonsai.run(document.getElementById('movie'), {
     code: function() {
@@ -21,6 +22,17 @@ var themovie = bonsai.run(document.getElementById('movie'), {
             },{
                 easing: "elasticOut"
             });
+        });
+
+        var itercount = 0;
+        var progress = new Text('Waiting for client request').addTo(stage).attr({
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '20',
+            textFillColor: 'white',
+            textStrokeColor: 'white',
+            textStrokeWidth: 1,
+            x: 30,
+            y: 30
         });
 
         stage.on('message', function(data) {
@@ -54,6 +66,8 @@ var themovie = bonsai.run(document.getElementById('movie'), {
                     x: 607,
                     y: 207
                 })
+                progress
+                .attr(itercount + " / " + totaliters)
             }
             else if(data.method == "sendToClient")
             {
@@ -111,6 +125,10 @@ starCountRef.on('value', function(snapshot) {
         });
         servants_here += 1;
     }
+});
+
+firebase.database().ref('model_structure/iterations').on('value', function(snapshot) {
+    totaliters = snapshot.val()
 });
 
 for(var i = 0; i < 10; i++)

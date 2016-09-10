@@ -21,13 +21,19 @@ firebase.initializeApp(config);
 var db = firebase.database();
 var servants_connected = 0;
 db.ref("model_structure").set({
-    hidden_size: "254",
-    num_inputs: "764",
-    num_outputs: "10",
+    hidden_size: "20",
+    num_inputs: "1",
+    num_outputs: "1",
     learning_rate: ".001",
 })
-db.ref("request_recieved").set(false)
+db.ref("request_recieved").set("false")
 db.ref("servants_connected").set(servants_connected)
+for(var i = 0; i < 10; i++)
+{
+    db.ref("status"+i).set(null);
+}
+db.ref("weights/hiddenWeights").set(null);
+db.ref("weights/outputWeights").set(null);
 
 app.post('/servant_connect', function (req, res) {
     servants_connected += 1;
@@ -52,8 +58,9 @@ app.post('/client_request', function (req, res) {
         num_inputs: req.body.num_inputs,
         num_outputs: req.body.num_outputs,
         learning_rate: req.body.learning_rate,
+        iterations: req.body.iterations
     })
-    db.ref("request_recieved").set(true)
+    db.ref("request_recieved").set("true")
 
     for(var i = 0; i < servants_connected; i++)
     {
@@ -61,6 +68,68 @@ app.post('/client_request', function (req, res) {
     }
     res.send("Recieved request");
 });
+
+var hiddenWeights = [];
+var outputWeights = [];
+var numHiddenRecieved = 0;
+var numOutputRecieved = 0;
+
+function checkFinished()
+{
+    if(numHiddenRecieved == servants_connected && numOutputRecieved == servants_connected)
+    {
+        numHiddenRecieved = 0
+        numOutputRecieved = 0
+        console.log(hiddenWeights.length)
+        var avgHidden = new Array(hiddenWeights[0].length+1).join('0').split('').map(parseFloat)
+        var avgOutput = new Array(outputWeights[0].length+1).join('0').split('').map(parseFloat)
+        for(var i = 0; i < hiddenWeights.length; i++)
+        {
+            for(var k = 0; k < hiddenWeights[0].length; k++)
+            {
+                avgHidden[k] += parseFloat(hiddenWeights[i][k])
+            }
+        }
+        for(var i = 0; i < outputWeights.length; i++)
+        {
+            for(var k = 0; k < outputWeights[0].length; k++)
+            {
+                avgOutput[k] += parseFloat(outputWeights[i][k])
+            }
+        }
+        for(var i = 0; i < hiddenWeights[0].length; i++)
+        {
+            avgHidden[i] /= servants_connected
+        }
+        for(var i = 0; i < outputWeights[0].length; i++)
+        {
+            avgOutput[i] /= servants_connected
+        }
+        hiddenWeights = [];
+        outputWeights = [];
+        db.ref("newWeights/newHiddenWeights").set(avgHidden.toString())
+        db.ref("newWeights/newOutputWeights").set(avgOutput.toString())
+    }
+}
+
+
+db.ref("weights/hiddenWeights").on("value", function(snapshot) {
+    if(snapshot.val() != null)
+    {
+        hiddenWeights.push(JSON.parse(snapshot.val()))
+        numHiddenRecieved += 1
+        checkFinished()
+    }
+}, function (errorObject) {});
+db.ref("weights/outputWeights").on("value", function(snapshot) {
+    if(snapshot.val() != null)
+    {
+        outputWeights.push(JSON.parse(snapshot.val()))
+        numOutputRecieved += 1
+        checkFinished()
+    }
+}, function (errorObject) {});
+
 
 
 app.get('/', function (req, res) {
