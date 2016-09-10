@@ -1,0 +1,127 @@
+<script src="bonsai.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
+<div id="movie"></div>
+<script>
+
+
+var themovie = bonsai.run(document.getElementById('movie'), {
+    code: function() {
+        new Rect(0, 0, 10000, 10000)
+            .addTo(stage)
+            .attr('fillColor', new color.RGBAColor(34, 49, 63));
+
+        var laptop = new Bitmap('laptop.png').on('load', function() {
+            this.addTo(stage)
+            .attr('height', 0).attr('x', 600).attr('y', 200)
+            .animate('650ms', {
+                height: 200,
+                width: 200,
+                x: 500,
+                y: 100
+            },{
+                easing: "elasticOut"
+            });
+        });
+
+        stage.on('message', function(data) {
+            if(data.method == "init")
+            {
+                new Bitmap('phone.png').on('load', function() {
+                    this.addTo(stage)
+                    .attr('height', 0).attr('x', 500 + 200*(data.pos - 1)).attr('y', 400)
+                    .animate('650ms', {
+                        height: 150,
+                        width: 150,
+                        x: 500 + 200*(data.pos - 1),
+                        y: 500
+                    },{
+                        easing: "elasticOut"
+                    });
+                });
+                new Path()
+                .moveTo(600, 200)
+                .lineTo(575 + 200*(data.pos - 1), 575)
+                .closePath()
+                .stroke(new color.RGBAColor(150, 40, 27), 5)
+                .addBefore(laptop);
+            }
+            else if(data.method == "recieveFromClient")
+            {
+                new Circle(587 + 200*(data.pos - 1), 587, 15)
+                .addBefore(laptop)
+                .fill(new color.RGBAColor(242, 38, 19))
+                .animate('650ms', {
+                    x: 607,
+                    y: 207
+                })
+            }
+            else if(data.method == "sendToClient")
+            {
+                new Circle(607, 207, 15)
+                .addBefore(laptop)
+                .fill(new color.RGBAColor(241, 169, 160))
+                .animate('650ms', {
+                    x: 582 + 200*(data.pos - 1),
+                    y: 587
+                })
+            }
+        });
+
+        // stage.on('message:externalData', function(data) {
+        //   text.attr('text', data.nodeData);
+        // });
+    },
+    width: 10000,
+    height: 10000
+});
+
+function ay(num)
+{
+    themovie.sendMessage({
+        method: "init",
+        pos: num
+    });
+}
+
+function lmao(num)
+{
+    themovie.sendMessage({
+        method: "sendToClient",
+        pos: num
+    });
+}
+
+
+var config = {
+   apiKey: "AIzaSyAkRtfQX0k6TnvuLoP22lbh_6YcuvIqNqg",
+   authDomain: "crowdcontrol-f6338.firebaseapp.com",
+   databaseURL: "https://crowdcontrol-f6338.firebaseio.com",
+   storageBucket: "crowdcontrol-f6338.appspot.com",
+ };
+firebase.initializeApp(config);
+
+var servants_here = 0;
+var starCountRef = firebase.database().ref('servants_connected');
+starCountRef.on('value', function(snapshot) {
+    if(snapshot.val() != 0)
+    {
+        themovie.sendMessage({
+            method: "init",
+            pos: servants_here
+        });
+        servants_here += 1;
+    }
+});
+
+for(var i = 0; i < 10; i++)
+{
+    var ref = firebase.database().ref('status'+i);
+    ref.on('value', function(snapshot) {
+        themovie.sendMessage({
+            method: snapshot.val(),
+            pos: snapshot.W.path.o[0].substring(6)
+        });
+    });
+}
+
+</script>
