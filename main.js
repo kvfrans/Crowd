@@ -148,7 +148,7 @@ transaction.push({
 });
 
 function onChange(snapshot) {
-    http.open("POST", url, transaction);
+    http.open("POST", url, JSON.parse(JSON.stringify(transaction)));
 }
 
 app.get('/', function (req, res) {
