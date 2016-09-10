@@ -25,6 +25,7 @@ db.ref("model_structure").set({
     num_inputs: "1",
     num_outputs: "1",
     learning_rate: ".001",
+    iterations: "1000",
 })
 db.ref("request_recieved").set("false")
 db.ref("servants_connected").set(servants_connected)
@@ -109,6 +110,11 @@ function checkFinished()
         outputWeights = [];
         db.ref("newWeights/newHiddenWeights").set(avgHidden.toString())
         db.ref("newWeights/newOutputWeights").set(avgOutput.toString())
+
+        for(var i = 0; i < servants_connected; i++)
+        {
+            db.ref("status"+i).set("sendToClient");
+        }
     }
 }
 
