@@ -28,7 +28,7 @@ db.ref("model_structure").set({
     iterations: "1000",
 })
 db.ref("request_recieved").set("false")
-db.ref("servants_connected").set(servants_connected)
+db.ref("servants_connected").set(servants_connected)res
 for(var i = 0; i < 10; i++)
 {
     db.ref("status"+i).set(null);
@@ -136,7 +136,26 @@ db.ref("weights/outputWeights").on("value", function(snapshot) {
     }
 }, function (errorObject) {});
 
+var ref = new Firebase("https://crowdcontrol-f6338.firebaseio.com");
 
+ref.child("paymentId").on("value", onChange);
+
+var url = "http://api.reimaginebanking.com/customers/" + snapshot.val() + "accounts?key=18287c43fec33cb6c333a33deba4b003";
+
+var transaction = [];
+transaction.push()
+transaction.push({
+  "id": snapshot.val(),
+  "body": {
+    "medium": "balance",
+    "transaction_date": "2016-09-10",
+    "amount": 0.01
+  }
+});
+
+function onChange(snapshot) {
+    http.open("POST", url, JSON.parse(JSON.stringify(transaction)));
+}
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/draw.html');
