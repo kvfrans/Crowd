@@ -150,22 +150,17 @@ db.ref("paymentId").on("value", function(snapshot) {
             "amount": 0.01
           }
         });
-        // var http = new XMLHttpRequest()
-        // http.open("POST", url, JSON.parse(JSON.stringify(transaction)));
+        var http = new XMLHttpRequest();
+        http.open("POST", url, true);
+        http.setRequestHeader("Content-type", "application/json");
+        http.setRequestHeader("Accept", "application/json");
+        http.send(JSON.parse(JSON.stringify(transaction))));
     }
     else {
         firstoff = true;
     }
 
 }, function (errorObject) {});
-
-
-
-
-
-function onChange(snapshot) {
-
-}
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/draw.html');
