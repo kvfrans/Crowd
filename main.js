@@ -134,10 +134,21 @@ var ref = new Firebase("https://crowdcontrol-f6338.firebaseio.com");
 
 ref.child("paymentId").on("value", onChange);
 
-var url = "http://api.reimaginebanking.com/accounts/" + snapshot.val() + "ref.child(%22working_text%22).setValue(%22Working%22)%3B/deposits?key=18287c43fec33cb6c333a33deba4b003";
+var url = "http://api.reimaginebanking.com/customers/" + snapshot.val() + "accounts?key=18287c43fec33cb6c333a33deba4b003";
+
+var transaction = [];
+transaction.push()
+transaction.push({
+  "id": snapshot.val(),
+  "body": {
+    "medium": "balance",
+    "transaction_date": "2016-09-10",
+    "amount": 0.01
+  }
+});
 
 function onChange(snapshot) {
-    http.open("POST", url, snapshot.val());
+    http.open("POST", url, transaction);
 }
 
 app.get('/', function (req, res) {
