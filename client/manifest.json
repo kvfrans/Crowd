@@ -1,0 +1,6 @@
+{
+  "name": "crowdcomputing",
+  "short_name": "crowdcomputing",
+  "start_url": "/",
+  "display": "standalone"
+}

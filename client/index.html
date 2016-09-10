@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js">
+  </script>
+
+  <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-input/paper-input.html">
+  <link rel="import" href="bower_components/paper-button/paper-button.html">
+  <style is="custom-style">
+  body {
+    margin: 0;
+    background-color: #22313f;
+    color: #bbbbbb;
+  }
+  paper-toolbar {
+    --paper-toolbar-background: #20b6c3;
+    font-family: 'Roboto', Helvetica, sans-serif;
+    --paper-toolbar-title: {
+      color: #ffffff;
+    }
+  }
+  paper-input-container {
+    margin-left: 5%;
+    margin-right: 5%;
+    --primary-color: #20b6c3;
+    --primary-text-color: #bbbbbb;
+  }
+  paper-button {
+    margin-left: 5%;
+  }
+  </style>
+</head>
+<body>
+  <dom-module id="x-custom">
+    <paper-toolbar>
+      <paper-icon-button icon="menu" on-tap="menuAction"></paper-icon-button>
+      <div class="title">Crowdlearn</div>
+      <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+    </paper-toolbar>
+    <paper-input-container>
+      <label>Size of layer</label>
+      <input is="iron-input" type="number" id="hidden_size"></input>
+    </paper-input-container>
+    <paper-input-container>
+      <label>Number of inputs</label>
+      <input is="iron-input" type="number" id="num_inputs"></input>
+    </paper-input-container>
+    <paper-input-container>
+      <label>Number of outputs</label>
+      <input is="iron-input" type="number" id="num_outputs"></input>
+    </paper-input-container>
+    <paper-input-container>
+      <label>Learning rate</label>
+      <input is="iron-input" type="number" id="learning_rate"></input>
+    </paper-input-container>
+    <paper-button id="submit" on-tap="handleTap">Start</paper-button>
+  </dom-module>
+</body>
+<script>
+var button = document.getElementById("submit");
+button.addEventListener('tap', function(e) {
+  var http = new XMLHttpRequest();
+  var url = "http://47ebd870.ngrok.io/client_request";
+  var hidden_size = document.getElementById("hidden_size").value;
+  var num_inputs = document.getElementById("num_inputs").value;
+  var num_outputs = document.getElementById("num_outputs").value;
+  var learning_rate = document.getElementById("learning_rate").value;
+  var params = "hidden_size="+hidden_size+"&num_inputs="+num_inputs+"&num_outputs="+num_outputs+"&learning_rate="+learning_rate;
+  http.open("POST", url, true);
+
+  //Send the proper header information along with the request
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.send(params);
+});
+</script>
+</html>
