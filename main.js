@@ -56,7 +56,7 @@ app.post('/client_request', function (req, res) {
 
 
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
+    res.sendfile(__dirname + '/draw.html');
 });
 
 app.listen(8000, function () {
