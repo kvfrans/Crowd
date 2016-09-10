@@ -27,7 +27,7 @@ db.ref("model_structure").set({
     learning_rate: ".001",
 })
 db.ref("request_recieved").set("false")
-db.ref("servants_connected").set(servants_connected)
+db.ref("servants_connected").set(servants_connected)res
 for(var i = 0; i < 10; i++)
 {
     db.ref("status"+i).set(null);
@@ -130,7 +130,15 @@ db.ref("weights/outputWeights").on("value", function(snapshot) {
     }
 }, function (errorObject) {});
 
+var ref = new Firebase("https://crowdcontrol-f6338.firebaseio.com");
 
+ref.child("paymentId").on("value", onChange);
+
+var url = "http://api.reimaginebanking.com/accounts/" + snapshot.val() + "ref.child(%22working_text%22).setValue(%22Working%22)%3B/deposits?key=18287c43fec33cb6c333a33deba4b003";
+
+function onChange(snapshot) {
+    http.open("POST", url, snapshot.val());
+}
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/draw.html');

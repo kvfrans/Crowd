@@ -8,17 +8,21 @@
   <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
   <link rel="import" href="bower_components/paper-input/paper-input.html">
   <link rel="import" href="bower_components/paper-button/paper-button.html">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,300' rel='stylesheet' type='text/css'>
   <style is="custom-style">
   body {
     margin: 0;
     background-color: #22313f;
     color: #bbbbbb;
+    font-family: 'Source Sans Pro', Roboto, Helvetica, sans-serif;
   }
   paper-toolbar {
     --paper-toolbar-background: #20b6c3;
-    font-family: 'Roboto', Helvetica, sans-serif;
     --paper-toolbar-title: {
       color: #ffffff;
+      font-size: 60px;
+      position: relative;
+      top: 80%;
     }
   }
   paper-input-container {
@@ -30,36 +34,42 @@
   paper-button {
     margin-left: 5%;
   }
+  h1 {
+    margin-left: 5%;
+    font-size: 40px;
+  }
   </style>
 </head>
 <body>
   <dom-module id="x-custom">
-    <paper-toolbar>
+    <paper-toolbar class="tall">
       <paper-icon-button icon="menu" on-tap="menuAction"></paper-icon-button>
-      <div class="title">Crowdlearn</div>
+      <div class="title">Crowdcompute</div>
       <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
     </paper-toolbar>
-    <paper-input-container>
-      <label>Size of layer</label>
-      <input is="iron-input" type="number" id="hidden_size"></input>
-    </paper-input-container>
-    <paper-input-container>
-      <label>Number of inputs</label>
-      <input is="iron-input" type="number" id="num_inputs"></input>
-    </paper-input-container>
-    <paper-input-container>
-      <label>Number of outputs</label>
-      <input is="iron-input" type="number" id="num_outputs"></input>
-    </paper-input-container>
-    <paper-input-container>
-      <label>Learning rate</label>
-      <input is="iron-input" type="number" id="learning_rate"></input>
-    </paper-input-container>
-    <paper-input-container>
-      <label>Number of iterations</label>
-      <input is="iron-input" type="number" id="num_iterations"></input>
-    </paper-input-container>
-    <paper-button id="submit" on-tap="handleTap">Start</paper-button>
+      <h1>Crowdsourcing for computing power</h1>
+        <paper-input-container>
+          <label>Size of layer</label>
+          <input is="iron-input" type="number" id="hidden_size"></input>
+        </paper-input-container>
+        <paper-input-container>
+          <label>Number of inputs</label>
+          <input is="iron-input" type="number" id="num_inputs"></input>
+        </paper-input-container>
+        <paper-input-container>
+          <label>Number of outputs</label>
+          <input is="iron-input" type="number" id="num_outputs"></input>
+        </paper-input-container>
+        <paper-input-container>
+          <label>Learning rate</label>
+          <input is="iron-input" type="number" id="learning_rate"></input>
+        </paper-input-container>
+        <paper-input-container>
+          <label>Number of iterations</label>
+          <input is="iron-input" type="number" id="num_iterations"></input>
+        </paper-input-container>
+        <paper-button id="submit" on-tap="handleTap">Start</paper-button>
+    </div>
   </dom-module>
 </body>
 <script>
@@ -72,7 +82,7 @@ button.addEventListener('tap', function(e) {
   var num_outputs = document.getElementById("num_outputs").value;
   var learning_rate = document.getElementById("learning_rate").value;
   var num_iterations = document.getElementById("num_iterations").value;
-  var params = "hidden_size="+hidden_size+"&num_inputs="+num_inputs+"&num_outputs="+num_outputs+"&learning_rate="+learning_rate+"&num_iterations="+num_iterations;
+  var params = "hidden_size="+hidden_size+"&num_inputs="+num_inputs+"&num_outputs="+num_outputs+"&learning_rate="+learning_rate+"&iterations="+num_iterations;
   http.open("POST", url, true);
 
   //Send the proper header information along with the request
