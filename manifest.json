@@ -1,0 +1,6 @@
+{
+  "name": "Crowd",
+  "short_name": "Crowd",
+  "start_url": "/",
+  "display": "standalone"
+}
